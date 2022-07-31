@@ -1,11 +1,8 @@
-#define TAILLE_MAX 1000
+#ifndef LOAD_H
+#define LOAD_H
 
-struct Value
-{
-    int index;
-    char binary[7];
-    char caract;
-};
-typedef struct Value Value;
+#include "variable.h"
 
 int readFile(Value *table);
+
+#endif

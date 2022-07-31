@@ -1,7 +1,9 @@
 #include <stdio.h>
+#include <stdlib.h>
 
+#include "strprocess.h"
+#include "variable.h"
 #include "load.h"
-#define NB_VALUE 64
 
 
 int main(int argc, char* argv[]) {
@@ -9,8 +11,7 @@ int main(int argc, char* argv[]) {
 
     readFile(table);
 
-    for (int i=0; i<NB_VALUE;i++){
-        printf("%d %s %c\n",table[i].index,table[i].binary,table[i].caract);
-    }
+    char string[4]={"Man"};
+    strcode(table,string);
 
 }

@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include "load.h"
-
+#include "variable.h"
 
 int readFile(Value *table){
 
