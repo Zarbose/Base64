@@ -30,7 +30,12 @@ int readFile(Value *table){
                 }
 
                 if (j==1){
-                    strcpy(table[i].binary,val);
+                    for (int k=0; k<TAILLE_BUFF; k++){
+                        if (val[k] == '0')
+                            table[i].binary[k] = 0;
+                        else
+                            table[i].binary[k] = 1;
+                    }
                 }
                 
                 if (j==2){

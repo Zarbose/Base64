@@ -8,10 +8,12 @@
 
 int main(int argc, char* argv[]) {
     Value table[NB_VALUE];
+    char strencoded[TAILLE_MAX];
+    char string[4]={"Man"};
 
     readFile(table);
 
-    char string[4]={"Man"};
-    strcode(table,string);
+    strcode(table,string,strencoded);
 
+    printf("%s\n",strencoded);
 }

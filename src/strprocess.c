@@ -6,19 +6,61 @@
 #include "variable.h"
 
 
-int strcode(Value* table, char* string){
-    printf("\n");
-    for (int i=0; string[i]!='\0'; i++){
-        int result[8];
-        intToByte((int)string[i],result);
+int strcode(Value* table, char* string, char* strencoded){
 
-        for(int j=0;j<8;j++){
-            printf("%d",result[j]);
+    int nb_byte=0;
+    int* list_byte = NULL;
+
+    nb_byte=strlen(string);
+    list_byte = malloc((8*nb_byte)*sizeof(int));
+    CLEAR(list_byte,8*nb_byte);
+
+    for (int i=0; string[i]!='\0'; i++){ // Construction du tableau qui va contenir la liste des bits
+
+        int token[8];
+        intToByte((int)string[i],token);
+
+        for (int j=0; j<8; j++){
+            list_byte[(8*i)+j]=token[j];
         }
-        // printf("\n");
-    } 
+    }
+
+    int cpt=0, index=0, cpt2=0;
+    int buff[TAILLE_BUFF];
+
+    for (int i=0; i<(8*nb_byte)+1; i++){
+
+        if(cpt == TAILLE_BUFF || i == 8*nb_byte){
+            index=findCaract(table,buff);
+            strencoded[cpt2]=table[index].caract;
+            cpt=0;
+            cpt2++;
+        }
+
+        buff[cpt]=list_byte[i];
+        cpt++;
+    }
+
+    free(list_byte);
     
     return 0;
+}
+
+int equalArrays(int* array1, int* array2){
+    for (int i=0; i<TAILLE_BUFF; i++){
+        if (array1[i] != array2[i])
+            return 1;
+    }
+    return 0;
+}
+
+int findCaract(Value* table, int* bytes){
+    int index=0;
+    for (int i=0; i<NB_VALUE; i++){
+        if (equalArrays(table[i].binary,bytes) == 0)
+            index=i;
+    }
+    return index;
 }
 
 int intToByte(int value, int* result){
@@ -29,9 +71,6 @@ int intToByte(int value, int* result){
         tab[j] = nbr%2;  
         nbr = nbr/2;  
     } 
-        
-    // printf("%d Le nombre binaire est = ",j);
-
 
     if(j<8){
         int bites[8];
@@ -42,8 +81,8 @@ int intToByte(int value, int* result){
             bites[k]=0;
         }
 
-        for(int l=0; l<8-diff;l++){
-            bites[k]=tab[l];
+        for(j=j-1; j >= 0; j--){
+            bites[k]=tab[j];
             k++;
         }
 
@@ -54,16 +93,12 @@ int intToByte(int value, int* result){
         return 0;
     }
     else{
-        for (int m=0;m<8;m++){
-            result[m]=tab[m];
+        int k=0;
+        for (j=j-1; j >= 0; j--){
+            result[k]=tab[j];
+            k++;
         }
     }
-    
-    // for(j=j-1; j >= 0; j--) {  
-    //     printf("%d",tab[j]);  
-    // } 
-    // printf("\n");
-
 
     return 0;
 }
