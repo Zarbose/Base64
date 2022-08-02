@@ -2,7 +2,7 @@
 #define VARIABLE_H
 
 #define TAILLE_MAX 1000
-#define NB_VALUE 64
+#define NB_VALUE 65
 #define TAILLE_BUFF 6
 
 struct Value
