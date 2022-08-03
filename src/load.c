@@ -5,7 +5,7 @@
 #include "load.h"
 #include "variable.h"
 
-int readFile(Value *table){
+int readFile(Value *table){ // Chargement de la table en mémoire
 
     FILE* inputFile = fopen( "../data/Base64Table.csv", "r" );
     char chaine[TAILLE_MAX];

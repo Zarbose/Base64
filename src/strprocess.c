@@ -5,7 +5,14 @@
 #include "strprocess.h"
 #include "variable.h"
 
-
+/**
+ * @brief Fonction qui permet de crypter une chaine de caractére
+ * 
+ * @param table Tableau Base64 de la RFC 4648
+ * @param string La chaine a crypter
+ * @param strencoded La variable qui contien le résultat de la fonction
+ * @return int 0 si tous c'est bien passer
+ */
 int strcode(Value* table, char* string, char* strencoded){
 
     int nb_byte=0, padding_zero=0, i=0, SIZE_LIST=0, padding_equal=0;
@@ -18,8 +25,6 @@ int strcode(Value* table, char* string, char* strencoded){
 
     padding_equal=paddingEqual(SIZE_LIST); // Détection du nombre de = à rajouter
     SIZE_LIST=SIZE_LIST+padding_equal;
-
-    // printf("SIZE_LIST = %d\n",SIZE_LIST);
 
     list_byte = malloc((SIZE_LIST)*sizeof(int));
     CLEAR(list_byte,SIZE_LIST);
@@ -49,10 +54,6 @@ int strcode(Value* table, char* string, char* strencoded){
         }
     }
 
-    // for (int w=0; w<SIZE_LIST; w++){
-    //     printf("%d",list_byte[w]);
-    // }
-
     int cpt=0, index=0, cpt2=0;
     int buff[TAILLE_BUFF];
 
@@ -70,6 +71,65 @@ int strcode(Value* table, char* string, char* strencoded){
 
     free(list_byte);
     
+    return 0;
+}
+
+/**
+ * @brief Fonction qui permet de decrypter une chaine de caractére
+ * 
+ * @param table Tableau Base64 de la RFC 4648
+ * @param string La chaine a decrypter
+ * @param strendecoded La variable qui contien le résultat de la fonction
+ * @return int 0 si tous c'est bien passer
+ */
+int strdecode(Value* table, char* string, char* strendecoded){
+
+    int i=0, SIZE_LIST=0, reduction=0;
+    int* list_byte = NULL;
+
+    SIZE_LIST=6*strlen(string);
+
+    list_byte = malloc((SIZE_LIST)*sizeof(int));
+
+    for (i=0; string[i]!='\0'; i++){ // Construction du tableau qui va contenir la liste des bits
+
+        int token[6];
+
+        if (string[i] == '='){
+            reduction++;
+        }
+        else{
+            for (int k=0; k<NB_VALUE; k++){
+                if (table[k].caract == string[i]){
+                    for (int l=0; l<6; l++){
+                        token[l]=table[k].binary[l];
+                    }
+                }
+            }
+
+            for (int j=0; j<6; j++){
+                list_byte[(6*i)+j]=token[j];
+            }
+        }
+    }
+
+    int cpt=0, int_value=0, cpt2=0;
+    int buff[8];
+
+    for (int j=0; j<(SIZE_LIST-(8*reduction))+1; j++){ // Construction de la chaine de sortie
+        if(cpt == 8 || j == SIZE_LIST){
+            int_value=byteToInt(buff);
+            strendecoded[cpt2]=(char)int_value;
+            cpt=0;
+            cpt2++;
+        }
+
+        buff[cpt]=list_byte[j];
+        cpt++;
+    }
+
+
+    free(list_byte);
     return 0;
 }
 
@@ -107,6 +167,19 @@ int findCaract(Value* table, int* bytes){
             index=i;
     }
     return index;
+}
+
+int byteToInt(int* value){
+
+    int result=0, x=128;
+    for (int i=0; i<8; i++){
+        if (value[i] == 1)
+            result+=x;
+
+        x=x/2;
+    }
+
+    return result;
 }
 
 int intToByte(int value, int* result){
