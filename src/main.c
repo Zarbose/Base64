@@ -15,7 +15,7 @@ int main(int argc, char* argv[]) {
     CLEAR(strencoded,TAILLE_MAX);
     CLEAR(strendecoded,TAILLE_MAX);
     CLEAR(string,TAILLE_MAX);
-    strcpy(string,"M");
+    strcpy(string,"Bonjour");
 
     readFile(table);
 
