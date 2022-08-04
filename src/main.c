@@ -24,4 +24,5 @@ int main(int argc, char* argv[]) {
 
     printf("%s\n",strencoded);
     printf("%s\n",strendecoded);
+
 }
