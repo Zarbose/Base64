@@ -1,3 +1,3 @@
-# Base64
+# Base64 project
 
-Le but est de recoder la code en base 64
+The goal is to recode the code in base 64
