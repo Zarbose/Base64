@@ -1,3 +1,9 @@
+//
+// variable.h
+//
+// Created by Simon Pieto on July 2022
+//
+
 #ifndef VARIABLE_H
 #define VARIABLE_H
 

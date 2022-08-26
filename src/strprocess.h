@@ -1,3 +1,9 @@
+//
+// strprocess.h
+//
+// Created by Simon Pieto on July 2022
+//
+
 #ifndef STRPROCESS_H
 #define STRPROCESS_H
 
