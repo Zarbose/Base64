@@ -1,3 +1,9 @@
+//
+// strprocess.c
+//
+// Created by Simon Pieto on July 2022
+//
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
