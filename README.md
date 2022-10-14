@@ -1,6 +1,6 @@
 # Base64 project
 
-The goal is to recode the code in base 64
+The goal is to recode the base 64 code
 
 ### Compiling in Linux and Mac OS
 ```bash
