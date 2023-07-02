@@ -1,39 +1,80 @@
 //
 // main.c
+// base64
 //
-// Created by Simon Pieto on July 2022
+// Created Simon Pieto on 02/07/2023.
 //
+
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
-#include "strprocess.h"
-#include "variable.h"
-#include "load.h"
+#include "encode.h"
+#include "constants.h"
 
-int main(int argc, char* argv[]) {
-    Value table[NB_VALUE];
-    char strencoded[TAILLE_MAX];
-    char strendecoded[TAILLE_MAX];
-    char string[255];
+char str[50];
+int action = 1;
 
-    CLEAR(strencoded,TAILLE_MAX);
-    CLEAR(strendecoded,TAILLE_MAX);
-    CLEAR(string,TAILLE_MAX);
+int scan_opt(int argc, char **argv, const char *opt) {
+	char c;
+	while ((c = getopt (argc, argv, opt)) != -1)
+		switch (c) {
+			case 's': strcpy(str, optarg); break;
+			case 'e': action = 1; break;
+			case 'd': action = 0; break;
+			default: return(-1);
+		}
+	return(0);
+}
 
-    readFile(table);
+int generate(char *istr) {
 
-    printf("Write a word :");
-    scanf("%s",string);
 
+    if (strlen(istr) == 0) return __OFF__;
     
-    strcode(table,string,strencoded);
-    printf("code of \"%s\" => %s\n",string,strencoded);
+    if (action == 1){
+        
+        encode(istr);
+    }
+    else {
+        // Check format
+        // decode(str);
+    }
 
-    strdecode(table,strencoded,strendecoded);
-    printf("decode of \"%s\" => %s\n",strencoded,strendecoded);
+	return(__ON__);
+}
 
 
-    return 0;
+int main(int argc, char * argv[]) {
+	int exit_value = EXIT_SUCCESS;
+	
+	char *syntax =
+	"c          -e : to encode the given string (default)\n"
+	"c          -d : to encode the given string\n"
+	"c          -s string    where string is the input string\n"
+	"c          -h : help (shows the argument list)\n"
+	;
+	
+	goto on_continue;
+on_break:
+
+	printf("c Syntax: %s <... Args ...>\n", argv[0]);
+	printf("c Args:\n");
+	printf("%s", syntax);
+	printf("\n");
+	exit_value = 1;
+	goto end;
+	
+on_continue:
+	if(scan_opt(argc, argv, "s:edh")) goto on_break;
+	
+	
+	if(!generate(str)) {
+		exit_value = EXIT_FAILURE;
+	}
+	
+end:
+	return((int) exit_value);
 }

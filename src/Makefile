@@ -1,22 +1,55 @@
-CC ?= gcc
-CFLAGS ?= -Wall -Wextra
-LDFLAGS ?=
+SHELL = /bin/bash
+# Uncomment for debugging
+#~ FLAGS = -Wall -O3 -std=c++11 -std=gnu++11 -fpic
+#FLAGS = -Wall -O3 -std=c++11 -std=gnu++11
+LDFLAGS = 
+CC = gcc 
+STRIP = strip
+FLAGS = -O3 -Wall 
+LDFLAGS = 
 
-objects := main.o strprocess.o load.o
+EDIT = vi
+ARC = ../base64
 
-.PHONY: clean
+SRC_SAT = 
+SRC_GEN = main.c encode.c decode.c utils.c
 
-base64: $(objects)
-	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@
+OBJ_SAT = $(SRC_SAT:.c=.o)
+LIB_SAT = $(SRC_SAT:.c=.h)
+OBJ_GEN = $(SRC_GEN:.c=.o)
+LIB_GEN = $(SRC_GEN:.c=.h)
 
-main.o: main.c strprocess.h variable.h load.h
-	$(CC) $(CFLAGS) -c $<
+### --- All Binaries
 
-strprocess.o: strprocess.c strprocess.h variable.h
-	$(CC) $(CFLAGS) -c $<
+all: ../base64 clean
 
-load.o: load.c load.h variable.h
-	$(CC) $(CFLAGS) -c $<
+../base64: $(OBJ_GEN)
+	$(CC) $^ -o $@ $(LDFLAGS) -lm
+
+%.o: %.c %.h
+	$(CC) $(FLAGS) -c $< 
+
+### --- OTHERS
 
 clean:
-	rm -f $(objects)
+	rm -f *.o *~ .*~ > /dev/null
+	
+arc:
+	echo "VERSION -- `date +'%y%m%d%H%M'`" > README
+	vi ./README
+	cd .. ; \
+	mkdir $(ARC)--`date +'%y%m%d%H%M'` ; \
+	cp $(ARC)/*.cpp $(ARC)/*.hpp $(ARC)/*.py $(ARC)/makefile $(ARC)/README $(ARC)/INFO $(ARC)/BEGINNING ./$(ARC)--`date +'%y%m%d%H%M'` > /dev/null 2>&1 ; \
+	tar cvzf ./$(ARC)--`date +'%y%m%d%H%M'.tar.gz` $(ARC)--`date +'%y%m%d%H%M'` ; \
+	rm -rf ./$(ARC)--`date +'%y%m%d%H%M'` ; \
+	cd $(ARC)
+	
+staticlib: $(OBJ_SAT)
+	ar rcs cryptonid.a $(OBJ_SAT)
+
+#~ sharedlib: $(OBJ_SAT)
+	#~ $(CC) $^ -o $@.o $(LDFLAGS) -lm
+	#~ g++ -shared -o $@.so $@.o
+
+doxygen: $(ARC).doxygen
+	doxygen $(ARC).doxygen > /dev/null
